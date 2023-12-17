@@ -9,6 +9,16 @@
       "projectName": "userservice",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-HotelApplication<hotel>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.hotel.hotel.HotelApplication",
+      "projectName": "hotel",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }
