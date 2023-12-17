@@ -1,4 +1,4 @@
-package com.userservice.services;
+package com.userservice.userservice.services;
 
 import java.util.List;
 
