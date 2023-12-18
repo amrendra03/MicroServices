@@ -19,6 +19,16 @@
       "projectName": "hotel",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-RatingserviceApplication<ratingservice>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.rating.ratingservice.RatingserviceApplication",
+      "projectName": "ratingservice",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }
