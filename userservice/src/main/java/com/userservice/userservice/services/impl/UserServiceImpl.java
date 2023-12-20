@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.userservice.userservice.entities.Rating;
 import com.userservice.userservice.entities.User;
 import com.userservice.userservice.exception.ResourceNotFoundException;
 import com.userservice.userservice.repositories.UserRepo;
@@ -43,10 +44,11 @@ public class UserServiceImpl implements UserService {
 
       User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-      ArrayList arr = restTemplate
-            .getForObject("http://localhost:8083/ratings/users/12b688ac-7d4c-4ffd-ac54-799767829436", ArrayList.class);
+      ArrayList<Rating> arr = restTemplate
+            .getForObject("http://localhost:8083/ratings/users/" + user.getUserId(), ArrayList.class);
 
-      logger.info("{}", arr);
+      // logger.info("{}", arr);
+      user.setRatings(arr);
       return user;
    }
 
