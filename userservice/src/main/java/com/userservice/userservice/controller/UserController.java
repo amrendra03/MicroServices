@@ -2,6 +2,9 @@ package com.userservice.userservice.controller;
 
 import java.util.List;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.apache.catalina.connector.Response;
+import org.slf4j.ILoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +36,20 @@ public class UserController {
 
    // single user get
    @GetMapping("/{userId}")
+   @CircuitBreaker(name="ratingHotelBreaker",fallbackMethod = "ratingHotelFallBack")
    public ResponseEntity<User> getUser(@PathVariable String userId) {
       User user = userService.getUser(userId);
       return new ResponseEntity<>(user, HttpStatus.OK);
    }
+
+   // creating fall back method for circuitbreakerr
+
+   public ResponseEntity<User> ratingHotelFallBack(String userId , Exception ex){
+      System.out.println("FallBack is executed because service is down: "+ex.getMessage());
+      User user = new User("1242","dummy@email.com","Servicess are down","Not  create",null);
+      return new ResponseEntity<>(user,HttpStatus.OK);
+   }
+
 
    // all user get
    @GetMapping("/")
