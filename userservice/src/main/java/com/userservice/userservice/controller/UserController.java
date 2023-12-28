@@ -3,8 +3,11 @@ package com.userservice.userservice.controller;
 import java.util.List;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.apache.catalina.connector.Response;
 import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,9 @@ public class UserController {
    @Autowired
    private UserService userService;
 
+   private Logger logger = LoggerFactory.getLogger(UserController.class);
+
+
    // create
    @PostMapping("/")
    public ResponseEntity<User> createUser(@RequestBody User user) {
@@ -35,17 +41,25 @@ public class UserController {
    }
 
    // single user get
+   int retryCount=1;
    @GetMapping("/{userId}")
-   @CircuitBreaker(name="ratingHotelBreaker",fallbackMethod = "ratingHotelFallBack")
+//   @CircuitBreaker(name="ratingHotelBreaker",fallbackMethod = "ratingHotelFallBack")
+   @Retry(name="ratingHotelService",fallbackMethod = "ratingHotelFallBack")
    public ResponseEntity<User> getUser(@PathVariable String userId) {
+      logger.info("from User Service Controller:---");
+      logger.info("Retry Count:{}",retryCount);
+      retryCount++;
+//      System.out.println(retryCount+" ------------------------m");
       User user = userService.getUser(userId);
       return new ResponseEntity<>(user, HttpStatus.OK);
    }
 
    // creating fall back method for circuitbreakerr
 
+
    public ResponseEntity<User> ratingHotelFallBack(String userId , Exception ex){
-      System.out.println("FallBack is executed because service is down: "+ex.getMessage());
+//      retryCount+=1;
+     logger.info("FallBack is executed because service is down: ",ex.getMessage());
       User user = new User("1242","dummy@email.com","Servicess are down","Not  create",null);
       return new ResponseEntity<>(user,HttpStatus.OK);
    }
