@@ -50,6 +50,7 @@ public class UserController {
       logger.info("Retry Count:{}",retryCount);
       retryCount++;
 //      System.out.println(retryCount+" ------------------------m");
+      System.out.println("checked...");
       User user = userService.getUser(userId);
       return new ResponseEntity<>(user, HttpStatus.OK);
    }
