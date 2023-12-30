@@ -3,6 +3,7 @@ package com.userservice.userservice.controller;
 import java.util.List;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.apache.catalina.connector.Response;
 import org.slf4j.ILoggerFactory;
@@ -44,7 +45,8 @@ public class UserController {
    int retryCount=1;
    @GetMapping("/{userId}")
 //   @CircuitBreaker(name="ratingHotelBreaker",fallbackMethod = "ratingHotelFallBack")
-   @Retry(name="ratingHotelService",fallbackMethod = "ratingHotelFallBack")
+//   @Retry(name="ratingHotelService",fallbackMethod = "ratingHotelFallBack")
+   @RateLimiter(name="userRateLimiter",fallbackMethod = "ratingHotelFallBack")
    public ResponseEntity<User> getUser(@PathVariable String userId) {
       logger.info("from User Service Controller:---");
       logger.info("Retry Count:{}",retryCount);
